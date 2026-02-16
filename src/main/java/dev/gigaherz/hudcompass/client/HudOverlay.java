@@ -138,10 +138,10 @@ public class HudOverlay implements IGuiOverlay
 
         //drawCenteredString(font, String.format("%f", yaw), xPos, 28, 0xFFFFFF);
 
-        drawCardinalDirection(graphics, yaw, 0, xPos, "S");
-        drawCardinalDirection(graphics, yaw, 90, xPos, "W");
-        drawCardinalDirection(graphics, yaw, 180, xPos, "N");
-        drawCardinalDirection(graphics, yaw, 270, xPos, "E");
+        drawCardinalDirection(graphics, yaw, 0, xPos, Component.translatable("text.hudcompass.direction.south"));
+        drawCardinalDirection(graphics, yaw, 90, xPos, Component.translatable("text.hudcompass.direction.west"));
+        drawCardinalDirection(graphics, yaw, 180, xPos, Component.translatable("text.hudcompass.direction.north"));
+        drawCardinalDirection(graphics, yaw, 270, xPos, Component.translatable("text.hudcompass.direction.east"));
 
         fillRect(graphics, xPos - 1.5f, 10, xPos - 0.5f, 18, 0x3FFFFFFF);
         fillRect(graphics, xPos + 0.5f, 10, xPos + 1.5f, 18, 0x3FFFFFFF);
@@ -223,7 +223,7 @@ public class HudOverlay implements IGuiOverlay
         return new Vec2((float) Math.toDegrees(-Math.atan2(xd, zd)), (float) yd);
     }
 
-    private void drawCardinalDirection(GuiGraphics graphics, float yaw, float angle, int xPos, String text)
+    private void drawCardinalDirection(GuiGraphics graphics, float yaw, float angle, int xPos, Component text)
     {
         float nDist = angleDistance(yaw, angle);
         if (Math.abs(nDist) <= 90)
@@ -237,10 +237,10 @@ public class HudOverlay implements IGuiOverlay
         }
     }
 
-    public void drawCenteredShadowString(GuiGraphics graphics, Font font, String text, float x, float y, int color)
+    public void drawCenteredShadowString(GuiGraphics graphics, Font font, Component text, float x, float y, int color)
     {
         float width = font.width(text);
-        graphics.drawString(font, text, (x - width / 2), y, color, true);
+        graphics.drawString(font, text.getVisualOrderText(), (x - width / 2), y, color, true);
     }
 
     public static void drawCenteredBoxedString(GuiGraphics graphics, Font font, String text, float x, float y, int color)
