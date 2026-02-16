@@ -14,7 +14,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -51,6 +50,11 @@ public class HudOverlay implements IGuiOverlay
     private final Minecraft mc;
     private final Font font;
     private final TextureManager textureManager;
+
+    final int bgColor = 0x3f000000;
+    final int notchColor = 0x3FFFFFFF;
+    final int cardinalNotchColor = 0x7FFFFFFF;
+    final int textColor = 0xFFFFFF;
 
     @SubscribeEvent
     public static void init(FMLConstructModEvent event)
@@ -128,13 +132,14 @@ public class HudOverlay implements IGuiOverlay
         float partialTicks = isPaused ? 0 : _partialTicks;
 
         int xPos = mc.getWindow().getGuiScaledWidth() / 2;
-        float yaw = Mth.lerp(partialTicks, mc.player.yHeadRotO, mc.player.yHeadRot) % 360;
+        float yaw = mc.gameRenderer.getMainCamera().getYRot();
+        yaw %= 360;
         //if (yaw > 180) yaw -= 360;
         if (yaw < 0) yaw += 360;
 
         RenderSystem.enableBlend();
 
-        fillRect(graphics, xPos - 90, 10, xPos + 90, 18, 0x3f000000);
+        fillRect(graphics, xPos - 90, 10, xPos + 90, 18, bgColor);
 
         //drawCenteredString(font, String.format("%f", yaw), xPos, 28, 0xFFFFFF);
 
@@ -143,11 +148,11 @@ public class HudOverlay implements IGuiOverlay
         drawCardinalDirection(graphics, yaw, 180, xPos, Component.translatable("text.hudcompass.direction.north"));
         drawCardinalDirection(graphics, yaw, 270, xPos, Component.translatable("text.hudcompass.direction.east"));
 
-        fillRect(graphics, xPos - 1.5f, 10, xPos - 0.5f, 18, 0x3FFFFFFF);
-        fillRect(graphics, xPos + 0.5f, 10, xPos + 1.5f, 18, 0x3FFFFFFF);
+        fillRect(graphics, xPos - 1.5f, 10, xPos - 0.5f, 18, notchColor);
+        fillRect(graphics, xPos + 0.5f, 10, xPos + 1.5f, 18, notchColor);
 
-        fillRect(graphics, xPos - 45 - 0.5f, 10, xPos - 45 + 0.5f, 18, 0x3FFFFFFF);
-        fillRect(graphics, xPos + 45 - 0.5f, 10, xPos + 45 + 0.5f, 18, 0x3FFFFFFF);
+        fillRect(graphics, xPos - 45 - 0.5f, 10, xPos - 45 + 0.5f, 18, notchColor);
+        fillRect(graphics, xPos + 45 - 0.5f, 10, xPos + 45 + 0.5f, 18, notchColor);
 
         final Player player = mc.player;
         double playerPosX = Mth.lerp(partialTicks, mc.player.xo, mc.player.getX());
@@ -229,11 +234,11 @@ public class HudOverlay implements IGuiOverlay
         if (Math.abs(nDist) <= 90)
         {
             float nPos = xPos + nDist;
-            fillRect(graphics, nPos - 0.5f, 10, nPos + 0.5f, 18, 0x7FFFFFFF);
+            fillRect(graphics, nPos - 0.5f, 10, nPos + 0.5f, 18, cardinalNotchColor);
             if (mc.options.backgroundForChatOnly().get())
-                drawCenteredShadowString(graphics, font, text, nPos, 1, 0xFFFFFF);
+                drawCenteredShadowString(graphics, font, text, nPos, 1, textColor);
             else
-                drawCenteredBoxedString(graphics, font, text, nPos, 1, 0xFFFFFF);
+                drawCenteredBoxedString(graphics, font, text, nPos, 1, textColor);
         }
     }
 
